@@ -1,7 +1,7 @@
 package widevine
 
 import (
-   "github.com/orajowo/wvgo/protobuf"
+   "github.com/orajowo/widevine/protobuf"
    "crypto"
    "crypto/aes"
    "crypto/cipher"
