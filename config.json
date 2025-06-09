@@ -1,0 +1,13 @@
+{
+  "html": {
+    "output": "../orajowo.github.io"
+  },
+  "modules": {
+    "widevine": {
+      "archive_ref_prefix": "tags/",
+      "ref": "v0.0.2",
+      "type": "github",
+      "url": "https://github.com/orajowo/widevine"
+    }
+  }
+}
