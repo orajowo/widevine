@@ -1,6 +1,7 @@
 {
   "html": {
-    "output": "out"
+    "output": "out",
+    "rootModule": "widevine"
   },
   "modules": {
     "widevine": {
