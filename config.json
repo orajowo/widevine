@@ -1,7 +1,7 @@
 {
   "defaults": {
     "type": "github",
-    "url_prefix": "https://github.com/orajowo/",
+    "url_prefix": "https://github.com/orajowo/widevine",
     "default_branch": "main"
   },
   "modules": {
