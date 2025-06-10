@@ -1,0 +1,30 @@
+name: Deploy Go Docs to GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.22' # Ganti dengan versi Go yang Anda gunakan
+
+      - name: Install go-doc-static
+        run: go install github.com/s-h-i-m-a/go-doc-static@latest
+
+      - name: Generate static docs
+        run: ~/go/bin/go-doc-static -dst docs
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
