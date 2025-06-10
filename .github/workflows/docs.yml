@@ -34,22 +34,21 @@ jobs:
       # 5. Generate dokumentasi HTML statis di root
       - name: Generate static HTML documentation
         run: |
-          run: |
-            MODULE_PATH=$(grep ^module go.mod | awk '{print $2}')
-            echo "Module path: $MODULE_PATH"
-          
-            godoc -http=:6060 &
-            GODOC_PID=$!
-            sleep 5
-          
-            wget --recursive --no-parent --adjust-extension --convert-links --page-requisites \
-              --no-host-directories \
-              --cut-dirs=4 \
-              --directory-prefix=godoc_html/ \
-              http://localhost:6060/pkg/$MODULE_PATH/ || true
-          
-            kill $GODOC_PID
-            touch godoc_html/.nojekyll
+          MODULE_PATH=$(grep ^module go.mod | awk '{print $2}')
+          echo "Module path: $MODULE_PATH"
+        
+          godoc -http=:6060 &
+          GODOC_PID=$!
+          sleep 5
+        
+          wget --recursive --no-parent --adjust-extension --convert-links --page-requisites \
+            --no-host-directories \
+            --cut-dirs=4 \
+            --directory-prefix=godoc_html/ \
+            http://localhost:6060/pkg/$MODULE_PATH/ || true
+        
+          kill $GODOC_PID
+          touch godoc_html/.nojekyll
 
 
       # 6. Deploy ke GitHub Pages root
