@@ -3,7 +3,7 @@ name: Deploy GoDoc to GitHub Pages
 on:
   push:
     branches:
-      - main # or 'master'
+      - main  # atau 'master' sesuai cabang default Anda
 
 permissions:
   contents: write
@@ -11,45 +11,52 @@ permissions:
 jobs:
   deploy-godoc:
     runs-on: ubuntu-latest
+
     steps:
+      # 1. Checkout kode
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2. Setup Go
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'
+          go-version: '1.22'  # Sesuaikan dengan versi Go proyek Anda
 
+      # 3. Install godoc
       - name: Install godoc
         run: go install golang.org/x/tools/cmd/godoc@latest
 
+      # 4. Buat direktori output
       - name: Create output directory
         run: mkdir -p godoc_html
 
+      # 5. Generate dokumentasi HTML statis
       - name: Generate static HTML documentation
         run: |
           MODULE_PATH=$(grep ^module go.mod | awk '{print $2}')
           echo "Module path: $MODULE_PATH"
-          # Replace / with _ for folder-safe path
-          MODULE_PATH_SAFE=$(echo "$MODULE_PATH" | sed 's|/|_|g')
-          echo "Sanitized module path: $MODULE_PATH_SAFE"
 
-          # Run godoc in background
+          # Jalankan godoc secara lokal
           godoc -http=:6060 &
           GODOC_PID=$!
           sleep 5
 
-          # Crawl only this module
+          # Download isi dokumentasi dengan wget (abaikan 404)
           wget --recursive --no-parent --adjust-extension --convert-links --page-requisites \
             --no-host-directories --directory-prefix=godoc_html/ \
-            http://localhost:6060/pkg/$MODULE_PATH/
+            http://localhost:6060/pkg/$MODULE_PATH/ || true
 
-          # Kill godoc server
+          # Matikan proses godoc
           kill $GODOC_PID
 
+          # Tambahkan .nojekyll agar GitHub Pages memproses folder dengan underscore
+          touch godoc_html/pkg/$MODULE_PATH/.nojekyll
+
+      # 6. Deploy ke GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./godoc_html/pkg/$(grep ^module go.mod | awk '{print $2}')
+          publish_dir: ./godoc_html/pkg
           keep_files: false
