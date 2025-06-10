@@ -25,7 +25,7 @@ jobs:
 
       # 3. Install golds (generator dokumentasi statis Go)
       - name: Install golds
-        run: go install github.com/go101/golds@latest
+        run: go install go101.org/golds@latest
 
       # 4. Generate dokumentasi statik ke folder output
       - name: Generate static Go documentation with golds
