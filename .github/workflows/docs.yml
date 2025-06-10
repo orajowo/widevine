@@ -3,7 +3,7 @@ name: Deploy GoDoc to GitHub Pages
 on:
   push:
     branches:
-      - main  # atau 'master', sesuaikan dengan cabang utama Anda
+      - main
 
 permissions:
   contents: write
@@ -21,7 +21,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.22'  # Sesuaikan dengan versi proyek Anda
+          go-version: '1.23'  # Sesuaikan dengan versi proyek Anda
 
       # 3. Install godoc
       - name: Install godoc
@@ -39,7 +39,7 @@ jobs:
         
           godoc -http=:6060 &
           GODOC_PID=$!
-          sleep 5
+          sleep 10
         
           wget --recursive --no-parent --adjust-extension --convert-links --page-requisites \
             --no-host-directories \
