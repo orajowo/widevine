@@ -28,10 +28,12 @@ jobs:
         run: go install go101.org/golds@latest
 
       # 4. Generate dokumentasi statik ke folder output
-      - name: Generate static Go documentation with golds
+      - name: Generate static HTML documentation
         run: |
           mkdir -p godoc_html
-          golds -gen -dir . -o godoc_html
+          golds -gen -dir ./
+          mv ./docs/* godoc_html/
+
 
       # 5. Deploy ke GitHub Pages
       - name: Deploy to GitHub Pages
