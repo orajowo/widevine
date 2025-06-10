@@ -57,4 +57,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./godoc_html
-          keep_files: false
+          publish_branch: main       # <- pakai `main`
+          destination_dir: .         # <- root, tidak perlu subfolder
+          force_orphan: true         # <- membuat root bersih
