@@ -3,7 +3,7 @@ name: Deploy GoDoc to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main  # ganti jika branch utamamu bukan 'main'
 
 permissions:
   contents: write
@@ -13,45 +13,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout kode
+      # 1. Checkout kode sumber
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 2. Setup Go
+      # 2. Setup Go environment
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23'  # Sesuaikan dengan versi proyek Anda
+          go-version: '1.23'  # Sesuaikan dengan versi Go kamu
 
-      # 3. Install godoc
-      - name: Install godoc
-        run: go install golang.org/x/tools/cmd/godoc@latest
+      # 3. Install golds (generator dokumentasi statis Go)
+      - name: Install golds
+        run: go install github.com/go101/golds@latest
 
-      # 4. Buat direktori output
-      - name: Create output directory
-        run: mkdir -p godoc_html
-
-      # 5. Generate dokumentasi HTML statis di root
-      - name: Generate static HTML documentation
+      # 4. Generate dokumentasi statik ke folder output
+      - name: Generate static Go documentation with golds
         run: |
-          MODULE_PATH=$(grep ^module go.mod | awk '{print $2}')
-          echo "Module path: $MODULE_PATH"
-        
-          godoc -http=:6060 &
-          GODOC_PID=$!
-          sleep 10
-        
-          wget --recursive --no-parent --adjust-extension --convert-links --page-requisites \
-            --no-host-directories \
-            --cut-dirs=4 \
-            --directory-prefix=godoc_html/ \
-            http://localhost:6060/pkg/$MODULE_PATH/ || true
-        
-          kill $GODOC_PID
-          touch godoc_html/.nojekyll
+          mkdir -p godoc_html
+          golds -gen -dir . -o godoc_html
 
-
-      # 6. Deploy ke GitHub Pages root
+      # 5. Deploy ke GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
