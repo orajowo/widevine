@@ -31,9 +31,7 @@ func (c *Cdm) Block(body ResponseBody) (cipher.Block, error) {
 	data = append(data, "ENCRYPTION"...)
 	data = append(data, 0)
 	data = append(data, c.license_request...)
-	// hash.Size()
 	data = append(data, 0, 0, 0, 128)
-	// github.com/chmike/cmac-go/blob/v1.1.0/cmac.go#L114-L133
 	hash.Write(data)
 	return aes.NewCipher(hash.Sum(nil))
 }
@@ -66,13 +64,14 @@ func (c *Cdm) New(private_key, client_id, pssh1 []byte) error {
 		c.private_key = key.(*rsa.PrivateKey)
 	}
 	c.license_request = protobuf.Message{ // LicenseRequest
-		{1, protobuf.Bytes(client_id)}, // ClientIdentification client_id
-		{2, protobuf.Message{ // ContentIdentification content_id
-			{1, protobuf.Message{ // WidevinePsshData widevine_pssh_data
-				{1, protobuf.Bytes(pssh1)},
+		{Number: 1, Payload: protobuf.Bytes(client_id)}, // ClientIdentification client_id
+		{Number: 2, Payload: protobuf.Message{ // ContentIdentification content_id
+			{Number: 1, Payload: protobuf.Message{ // WidevinePsshData widevine_pssh_data
+				{Number: 1, Payload: protobuf.Bytes(pssh1)},
 			}},
 		}},
 	}.Marshal()
+
 	return nil
 }
 
