@@ -1,6 +1,6 @@
 # widevine
 
-> This repository is a **personal-use fork** of the original [`3052/widevine`](https://github.com/3052/widevine) project.
+> This repository is a **my-personal-use** of the original [`3052/widevine`](https://github.com/3052/widevine) project.
 
 ## Disclaimer
 
